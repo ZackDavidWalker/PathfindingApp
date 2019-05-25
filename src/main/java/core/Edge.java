@@ -55,6 +55,12 @@ public class Edge
         return connectedNode1.equals(sourceNode) ? connectedNode2 : connectedNode1;
     }
 
+    public boolean connects(Node node1, Node node2)
+    {
+        return node1.equals(connectedNode1) && node2.equals(connectedNode2) ||
+                node1.equals(connectedNode2) && node2.equals(connectedNode1);
+    }
+
     public boolean equals(Object other)
     {
         if (!(other instanceof Edge)) return false;
