@@ -4,8 +4,8 @@ import org.junit.*;
 
 public class GraphTest
 {
-    Node n1, n2, n3, n4, n5, n6;
-    Graph g;
+    private Node n1, n2, n3, n4, n5, n6;
+    private Graph g;
 
     @Before
     public void setUp()
@@ -35,6 +35,18 @@ public class GraphTest
         g.setEdgeWeightBetween(n1, n6, EdgeWeightType.Distance, 1);
         g.setEdgeWeightBetween(n2, n3, EdgeWeightType.Distance, 7);
         g.setEdgeWeightBetween(n3, n4, EdgeWeightType.Distance, 2);
+
+        g.setEdgeWeightBetween(n1, n2, EdgeWeightType.Time, 10);
+        g.setEdgeWeightBetween(n1, n4, EdgeWeightType.Time, 5);
+        g.setEdgeWeightBetween(n1, n6, EdgeWeightType.Time, 3);
+        g.setEdgeWeightBetween(n2, n3, EdgeWeightType.Time, 5);
+        g.setEdgeWeightBetween(n3, n4, EdgeWeightType.Time, 6);
+
+        g.setEdgeWeightBetween(n1, n2, EdgeWeightType.Cost, 3);
+        g.setEdgeWeightBetween(n1, n4, EdgeWeightType.Cost, 2);
+        g.setEdgeWeightBetween(n1, n6, EdgeWeightType.Cost, 11);
+        g.setEdgeWeightBetween(n2, n3, EdgeWeightType.Cost, 7);
+        g.setEdgeWeightBetween(n3, n4, EdgeWeightType.Cost, 4);
     }
 
     @Test
