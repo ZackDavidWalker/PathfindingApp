@@ -7,6 +7,7 @@ public class Graph
 {
     private ArrayList<Node> allNodes;
     private ArrayList<Edge> allEdges;
+    private IPathfindingAlgorithm pathfinder;
 
     public Graph()
     {
@@ -37,11 +38,23 @@ public class Graph
                 .orElse(null);
     }
 
+    public void setEdgeWeightBetween(Node node1, Node node2, EdgeWeightType weightType, double weightValue)
+    {
+        Edge edge = getEdgeBetween(node1, node2);
+        if (edge != null)
+            edge.setWeight(weightType, weightValue);
+    }
+
     public ArrayList<Node> getNeighborsForNode(Node node)
     {
         return allNodes.parallelStream()
                 .filter(x -> getEdgeBetween(x, node) != null)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Path findPath(Node sourceNode, Node endNode, EdgeWeightType weightType)
+    {
+        return pathfinder.findPath(sourceNode, endNode, weightType);
     }
 
     public boolean areConnected(Node node1, Node node2)

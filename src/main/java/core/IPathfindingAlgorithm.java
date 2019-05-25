@@ -2,5 +2,5 @@ package core;
 
 public interface IPathfindingAlgorithm
 {
-    Graph findPath(Node startNode, Node endNode);
+    Path findPath(Node startNode, Node endNode, EdgeWeightType weightType);
 }

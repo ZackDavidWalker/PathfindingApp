@@ -3,7 +3,7 @@ package core;
 public class DijkstraAlgorithm implements IPathfindingAlgorithm
 {
     @Override
-    public Graph findPath(Node startNode, Node endNode)
+    public Path findPath(Node startNode, Node endNode, EdgeWeightType weightType)
     {
         // TODO: implement
         return null;

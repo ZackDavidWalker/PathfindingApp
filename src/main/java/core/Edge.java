@@ -50,9 +50,12 @@ public class Edge
                     .setValue(value);
     }
 
-    public Node getPartner(Node sourceNode)
+    public EdgeWeight getWeight(EdgeWeightType weightType)
     {
-        return connectedNode1.equals(sourceNode) ? connectedNode2 : connectedNode1;
+        return weights.parallelStream()
+                .filter(x -> x.getType().equals(weightType))
+                .findFirst()
+                .orElse(null);
     }
 
     public boolean connects(Node node1, Node node2)

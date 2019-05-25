@@ -29,6 +29,12 @@ public class GraphTest
         g.connectNodes(n1, n6);
         g.connectNodes(n2, n3);
         g.connectNodes(n3, n4);
+
+        g.setEdgeWeightBetween(n1, n2, EdgeWeightType.Distance, 3);
+        g.setEdgeWeightBetween(n1, n4, EdgeWeightType.Distance, 2);
+        g.setEdgeWeightBetween(n1, n6, EdgeWeightType.Distance, 1);
+        g.setEdgeWeightBetween(n2, n3, EdgeWeightType.Distance, 7);
+        g.setEdgeWeightBetween(n3, n4, EdgeWeightType.Distance, 2);
     }
 
     @Test
@@ -92,5 +98,16 @@ public class GraphTest
         Assert.assertTrue(g.getEdgeBetween(n3, n5) == null);
         Assert.assertTrue(g.getEdgeBetween(n4, n5) == null);
         Assert.assertTrue(g.getEdgeBetween(n6, n5) == null);
+    }
+
+    @Test
+    public void TestEdgeWeight()
+    {
+        EdgeWeightType weightType = EdgeWeightType.Distance;
+        Assert.assertEquals(3.0, g.getEdgeBetween(n1, n2).getWeight(weightType).getValue(), 0.0);
+        Assert.assertEquals(2.0, g.getEdgeBetween(n1, n4).getWeight(weightType).getValue(), 0.0);
+        Assert.assertEquals(1.0, g.getEdgeBetween(n1, n6).getWeight(weightType).getValue(), 0.0);
+        Assert.assertEquals(7.0, g.getEdgeBetween(n2, n3).getWeight(weightType).getValue(), 0.0);
+        Assert.assertEquals(2.0, g.getEdgeBetween(n3, n4).getWeight(weightType).getValue(), 0.0);
     }
 }
