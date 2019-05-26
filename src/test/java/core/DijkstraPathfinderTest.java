@@ -41,6 +41,45 @@ public class DijkstraPathfinderTest
         Assert.assertNull(pathfinder.findPath("n1", "n6", EdgeWeightType.Distance));
     }
 
+    @Test
+    public void TestClosedNode()
+    {
+        pathfinder = new DijkstraPathfinder(simpleGraph);
+        simpleGraph.getAllNodes().stream()
+                .filter(x -> x.getName().equals("n4"))
+                .findFirst()
+                .get()
+                .setOpen(false);
+        Path path = pathfinder.findPath("n1", "n3", EdgeWeightType.Distance);
+        Assert.assertEquals("n1 -> n2 -> n3", path.toString());
+    }
+
+    @Test
+    public void TestStartNodeClosed()
+    {
+        pathfinder = new DijkstraPathfinder(simpleGraph);
+        simpleGraph.getAllNodes().stream()
+                .filter(x -> x.getName().equals("n1"))
+                .findFirst()
+                .get()
+                .setOpen(false);
+        Path path = pathfinder.findPath("n1", "n3", EdgeWeightType.Distance);
+        Assert.assertNull(path);
+    }
+
+    @Test
+    public void TestEndNodeClosed()
+    {
+        pathfinder = new DijkstraPathfinder(simpleGraph);
+        simpleGraph.getAllNodes().stream()
+                .filter(x -> x.getName().equals("n3"))
+                .findFirst()
+                .get()
+                .setOpen(false);
+        Path path = pathfinder.findPath("n1", "n3", EdgeWeightType.Distance);
+        Assert.assertNull(path);
+    }
+
     private Graph getSimpleGraph()
     {
         Graph g = new Graph();

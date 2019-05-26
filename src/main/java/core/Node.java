@@ -6,11 +6,13 @@ public class Node
 {
     private String name;
     private ArrayList<Edge> edges;
+    private boolean isOpen;
 
     public Node(String name)
     {
         edges = new ArrayList<>();
         this.name = name;
+        isOpen = true;
     }
 
     public void addEdge(Edge edge)
@@ -28,6 +30,16 @@ public class Node
     {
         if (!(other instanceof Node)) return false;
         return ((Node)other).name.equals(this.name);
+    }
+
+    public boolean isOpen()
+    {
+        return isOpen;
+    }
+
+    public void setOpen(boolean isOpen)
+    {
+        this.isOpen = isOpen;
     }
 
     public String toString()

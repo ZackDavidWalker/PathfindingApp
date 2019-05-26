@@ -67,7 +67,7 @@ public class Graph
     public ArrayList<Node> getNeighborsForNode(Node node)
     {
         return allNodes.parallelStream()
-                .filter(x -> getEdgeBetween(x, node) != null)
+                .filter(x -> getEdgeBetween(x, node) != null && x.isOpen())
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -80,7 +80,7 @@ public class Graph
     {
         if (getEdgeBetween(sourceNode, endNode) != null) return true;
         ArrayList<Node> neighbors = getNeighborsForNode(sourceNode).parallelStream()
-                .filter(x -> !visitedNodes.contains(x))
+                .filter(x -> !visitedNodes.contains(x) && x.isOpen())
                 .collect(Collectors.toCollection(ArrayList::new));
         if (neighbors.isEmpty()) return false;
         else if (neighbors.contains(endNode)) return true;

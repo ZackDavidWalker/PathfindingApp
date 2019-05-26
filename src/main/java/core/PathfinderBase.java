@@ -22,12 +22,13 @@ public abstract class PathfinderBase implements IPathfinder
     {
         this.startNode = graph.getNode(startNode);
         this.endNode = graph.getNode(endNode);
-        if (!graph.areConnected(this.startNode, this.endNode))
-            return null;
         if (this.startNode == null || this.endNode == null)
             throw new IllegalArgumentException("Given start- or end-node does not exist within the given graph");
         if (graph == null || weightType == null)
             throw new IllegalStateException("Graph or weight type is null. Cannot proceed");
+        if (!graph.areConnected(this.startNode, this.endNode) ||
+                !this.endNode.isOpen() || !this.startNode.isOpen())
+            return null;
         setWeightType(weightType);
         return internalFindPath(this.startNode, this.endNode);
     }

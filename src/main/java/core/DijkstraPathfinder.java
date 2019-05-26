@@ -21,7 +21,7 @@ public class DijkstraPathfinder extends PathfinderBase
         allNodes = new ArrayList<>();
         unsettledNodes = new ArrayList<>();
         settledNodes = new ArrayList<>();
-        graph.getAllNodes().forEach(x ->
+        graph.getAllNodes().stream().filter(Node::isOpen).forEach(x ->
         {
             EvaluatedNode evalNode = new EvaluatedNode(x);
             nodeMap.put(x, evalNode);
