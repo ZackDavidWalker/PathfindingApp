@@ -7,7 +7,7 @@ public class Graph
 {
     private ArrayList<Node> allNodes;
     private ArrayList<Edge> allEdges;
-    private IPathfindingAlgorithm pathfinder;
+    private IPathfinder pathfinder;
 
     public Graph()
     {
@@ -15,10 +15,23 @@ public class Graph
         allEdges = new ArrayList<>();
     }
 
+    public ArrayList<Node> getAllNodes()
+    {
+        return allNodes;
+    }
+
     public void addNode(Node node)
     {
         if (!allNodes.contains(node))
             allNodes.add(node);
+    }
+
+    public Node getNode(String name)
+    {
+        return allNodes.parallelStream()
+                .filter(x -> x.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public void connectNodes(Node node1, Node node2)
@@ -28,6 +41,12 @@ public class Graph
         node2.addEdge(edge);
         if (!allEdges.contains(edge))
             allEdges.add(edge);
+    }
+
+    public void connectNodes(Node node1, Node node2, EdgeWeightType weightType, double weight)
+    {
+        connectNodes(node1, node2);
+        setEdgeWeightBetween(node1, node2, weightType, weight);
     }
 
     public Edge getEdgeBetween(Node node1, Node node2)
@@ -50,11 +69,6 @@ public class Graph
         return allNodes.parallelStream()
                 .filter(x -> getEdgeBetween(x, node) != null)
                 .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    public Path findPath(Node sourceNode, Node endNode, EdgeWeightType weightType)
-    {
-        return pathfinder.findPath(sourceNode, endNode, weightType);
     }
 
     public boolean areConnected(Node node1, Node node2)

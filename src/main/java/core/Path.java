@@ -16,11 +16,17 @@ public class Path
         nodePath.add(node);
     }
 
+    public void addAtStart(Node node)
+    {
+        nodePath.addFirst(node);
+    }
+
     public String toString()
     {
+        String delimiter = " -> ";
         StringBuilder sb = new StringBuilder();
-        nodePath.stream()
-                .forEach(x -> sb.append(x.getName() + " -> "));
+        nodePath.forEach(x -> sb.append(x.getName()).append(delimiter));
+        sb.delete(sb.lastIndexOf(delimiter), sb.length());
         return sb.toString();
     }
 }
