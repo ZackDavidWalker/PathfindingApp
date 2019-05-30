@@ -1,9 +1,12 @@
 package gui.Shapes;
 
+import javafx.animation.Interpolator;
+import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 public class PathEdge extends Line
 {
@@ -12,6 +15,7 @@ public class PathEdge extends Line
     private final double WIDTH = 4;
     private PathNode startNode;
     private PathNode endNode;
+    private Timeline timeline;
 
     public PathEdge()
     {
@@ -57,10 +61,10 @@ public class PathEdge extends Line
 
     private void translate()
     {
-        double startX = startNode.getTranslateX() + PathNode.RADIUS/2;
-        double startY = startNode.getTranslateY() + PathNode.RADIUS/2;
-        double endX = endNode.getTranslateX() + PathNode.RADIUS/2;
-        double endY = endNode.getTranslateY() + PathNode.RADIUS/2;
+        double startX = startNode.getTranslateX() + PathNode.RADIUS / 2;
+        double startY = startNode.getTranslateY() + PathNode.RADIUS / 2;
+        double endX = endNode.getTranslateX() + PathNode.RADIUS / 2;
+        double endY = endNode.getTranslateY() + PathNode.RADIUS / 2;
 
         if (startX <= endX)
             setTranslateX(startX);
@@ -72,4 +76,27 @@ public class PathEdge extends Line
             setTranslateY(startY);
 
     }
+
+    public void animate(boolean reverse)
+    {
+        getStrokeDashArray().setAll(10d, 10d, 10d, 10d);
+        final double maxOffset = reverse ? getStrokeDashArray().stream()
+                .reduce(0d, Double::sum) : getStrokeDashArray().stream()
+                .reduce(0d, (a, b) -> a - b);
+        timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(strokeDashOffsetProperty(), 0, Interpolator.LINEAR)),
+                new KeyFrame(Duration.seconds(2), new KeyValue(strokeDashOffsetProperty(), maxOffset, Interpolator.LINEAR))
+        );
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    public void stopAnimate()
+    {
+        getStrokeDashArray().clear();
+        if (timeline != null)
+            timeline.stop();
+    }
+
 }

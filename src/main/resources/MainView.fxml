@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.text.Text?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="gui.MainController" fx:id="root"
-            stylesheets="css/MainViewStyle.css">
+            stylesheets="css/MainViewStyle.css" >
     <fx:define>
         <ToggleGroup fx:id="shape"/>
     </fx:define>
@@ -31,6 +28,13 @@
         </HBox>
     </top>
     <center>
-        <StackPane fx:id="graphPane" onMouseClicked="#setShape"/>
+        <StackPane fx:id="graphPane" onMouseClicked="#setShape" onMouseMoved="#onMouseMoved"/>
     </center>
+    <bottom>
+        <HBox >
+            <Text fx:id="nodeNameText" />
+            <Region HBox.hgrow="ALWAYS"/>
+            <Text fx:id="currentCoordsText" />
+        </HBox>
+    </bottom>
 </BorderPane>

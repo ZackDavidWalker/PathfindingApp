@@ -1,7 +1,7 @@
 package gui.Shapes;
 
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class PathNode extends Circle
@@ -21,6 +21,8 @@ public class PathNode extends Circle
     public PathNode(String name, double x, double y)
     {
         this.name = name;
+        Tooltip tooltip = new Tooltip(name);
+        Tooltip.install(this, tooltip);
         setRadius(RADIUS);
         super.setFill(FILL);
         currentColor = FILL;

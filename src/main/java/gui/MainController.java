@@ -6,12 +6,15 @@ import gui.Shapes.PathNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,6 +40,10 @@ public class MainController
     private TextField startNodeName;
     @FXML
     private TextField endNodeName;
+    @FXML
+    private Text nodeNameText;
+    @FXML
+    private Text currentCoordsText;
 
     public MainController()
     {
@@ -80,21 +87,32 @@ public class MainController
         edge.setStartNode(node);
         activeEdge = edge;
         edgeDrawingActive = true;
+        nodeNameText.setText(node.getName() + " -> ");
     }
 
     private void endLineAt(PathNode node, PathEdge edge)
     {
-        edge.setEndNode(node);
-        StackPane.setAlignment(edge, Pos.TOP_LEFT);
-        graphPane.getChildren().add(edge);
-        edge.toBack();
-        activeEdge = null;
-        edgeDrawingActive = false;
-        model.connectNodes(model.getNode(edge.getStartNode().getName()),
-                model.getNode(edge.getEndNode().getName()),
-                EdgeWeightType.Distance,
-                edge.getLength());
-        edges.add(edge);
+        if (!node.equals(edge.getStartNode()))
+        {
+            edge.setEndNode(node);
+            StackPane.setAlignment(edge, Pos.TOP_LEFT);
+            graphPane.getChildren().add(edge);
+            edge.toBack();
+            activeEdge = null;
+            edgeDrawingActive = false;
+            model.connectNodes(model.getNode(edge.getStartNode().getName()),
+                    model.getNode(edge.getEndNode().getName()),
+                    EdgeWeightType.Distance,
+                    edge.getLength());
+            edges.add(edge);
+            nodeNameText.setText("");
+        }
+        else
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Failed to connect nodes");
+            alert.setContentText("You cannot connect node to itself.");
+        }
     }
 
     private void setNode(MouseEvent mouseEvent)
@@ -103,8 +121,22 @@ public class MainController
         StackPane.setAlignment(node, Pos.TOP_LEFT);
         graphPane.getChildren().add(node);
         node.setOnMouseClicked(this::onNodeClicked);
-        node.setOnMouseEntered(x -> node.setFill(PathNode.FILL_MOUSEOVER));
-        node.setOnMouseExited(x -> node.setFill(node.getCurrentMainColor()));
+        node.setOnMouseEntered(x ->
+        {
+            node.setFill(PathNode.FILL_MOUSEOVER);
+            if (!edgeDrawingActive)
+                nodeNameText.setText("Node: " + node.getName());
+            else
+                nodeNameText.setText(nodeNameText.getText() + node.getName());
+        });
+        node.setOnMouseExited(x ->
+        {
+            node.setFill(node.getCurrentMainColor());
+            if (!edgeDrawingActive)
+                nodeNameText.setText("");
+            else if (nodeNameText.getText().contains(node.getName()) && nodeNameText.getText().lastIndexOf(node.getName()) > 0)
+                nodeNameText.setText(nodeNameText.getText().replace(" " + node.getName(), " "));
+        });
         nodes.add(node);
         model.addNode(new Node(node.getName()));
     }
@@ -154,7 +186,11 @@ public class MainController
     public void findPath(ActionEvent actionEvent)
     {
         nodes.forEach(x -> x.setMainColor(PathNode.FILL));
-        edges.forEach(x -> x.setStroke(PathEdge.COLOR));
+        edges.forEach(x ->
+        {
+            x.setStroke(PathEdge.COLOR);
+            x.stopAnimate();
+        });
         String startNodeName = this.startNodeName.getText();
         String endNodeName = this.endNodeName.getText();
         Node startNode = model.getNode(startNodeName);
@@ -187,19 +223,40 @@ public class MainController
                     if (prev != null)
                     {
                         Node finalPrev = prev;
-                        edges.stream()
+                        PathEdge edge = edges.stream()
                                 .filter(x -> x.getStartNode().getName().equals(finalPrev.getName()) &&
                                         x.getEndNode().getName().equals(finalCurr.getName()) ||
                                         x.getStartNode().getName().equals(finalCurr.getName()) &&
-                                        x.getEndNode().getName().equals(finalPrev.getName()))
+                                                x.getEndNode().getName().equals(finalPrev.getName()))
                                 .findFirst()
-                                .get()
-                                .setStroke(PathEdge.OPT_PATH_COLOR);
+                                .get();
+                        edge.setStroke(PathEdge.OPT_PATH_COLOR);
+                        boolean reverse = edge.getStartNode().getName().equals(curr.getName());
+                        edge.animate(reverse);
                     }
 
                     prev = curr;
                 }
             }
+            else
+            {
+                nodes.stream().filter(x -> x.getName().equals(startNodeName)).findFirst().get().setMainColor(PathNode.OPT_PATH_FILL_FIRST);
+                nodes.stream().filter(x -> x.getName().equals(endNodeName)).findFirst().get().setMainColor(PathNode.OPT_PATH_FILL_LAST);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Failed to find path");
+                alert.setContentText(startNodeName + " and " + endNodeName + " are not connected");
+                alert.showAndWait();
+            }
+        }
+        else
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Failed to find path");
+            if (startNode == null)
+                alert.setContentText("The node '" + startNodeName + "' does not exist.");
+            else if (endNode == null)
+                alert.setContentText("The node '" + endNodeName + "' does not exist.");
+            alert.showAndWait();
         }
     }
 
@@ -210,5 +267,13 @@ public class MainController
         edges.clear();
         usedInts.clear();
         model.clear();
+    }
+
+    public void onMouseMoved(MouseEvent mouseEvent)
+    {
+        DecimalFormat df = new DecimalFormat("0.00");
+        double currentX = mouseEvent.getX();
+        double currentY = mouseEvent.getY();
+        currentCoordsText.setText("X: " + df.format(currentX) + "; Y: " + df.format(currentY));
     }
 }
