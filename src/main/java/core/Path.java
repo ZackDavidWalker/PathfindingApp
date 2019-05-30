@@ -21,6 +21,11 @@ public class Path
         nodePath.addFirst(node);
     }
 
+    public LinkedList<Node> getNodePath()
+    {
+        return nodePath;
+    }
+
     public String toString()
     {
         String delimiter = " -> ";

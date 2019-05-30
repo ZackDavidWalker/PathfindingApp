@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.canvas.Canvas?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.MainController" fx:id="root"
+            stylesheets="css/MainViewStyle.css">
+    <fx:define>
+        <ToggleGroup fx:id="shape"/>
+    </fx:define>
+    <top>
+        <HBox fx:id="toolbar">
+            <ToggleButton fx:id="nodeToggle" toggleGroup="$shape" text="Node"/>
+            <ToggleButton fx:id="edgeToggle" toggleGroup="$shape" text="Edge"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox spacing="3" alignment="CENTER_RIGHT">
+                <Label text="Find path between: " alignment="CENTER"/>
+                <TextField fx:id="startNodeName" alignment="CENTER" prefWidth="50"/>
+                <Label text=" and " alignment="CENTER"/>
+                <TextField fx:id="endNodeName" alignment="CENTER" prefWidth="50"/>
+                <Button text="Go" onAction="#findPath" alignment="CENTER"/>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Clear" onAction="#clear"/>
+        </HBox>
+    </top>
+    <center>
+        <StackPane fx:id="graphPane" onMouseClicked="#setShape"/>
+    </center>
+</BorderPane>

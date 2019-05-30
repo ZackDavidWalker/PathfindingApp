@@ -7,7 +7,6 @@ public class Graph
 {
     private ArrayList<Node> allNodes;
     private ArrayList<Edge> allEdges;
-    private IPathfinder pathfinder;
 
     public Graph()
     {
@@ -32,6 +31,12 @@ public class Graph
                 .filter(x -> x.getName().equals(name))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void clear()
+    {
+        allEdges.clear();
+        allNodes.clear();
     }
 
     public void connectNodes(Node node1, Node node2)
