@@ -32,7 +32,7 @@
     </center>
     <bottom>
         <HBox >
-            <Text fx:id="nodeNameText" />
+            <Text fx:id="infoText" />
             <Region HBox.hgrow="ALWAYS"/>
             <Text fx:id="currentCoordsText" />
         </HBox>

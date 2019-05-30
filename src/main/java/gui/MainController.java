@@ -41,7 +41,7 @@ public class MainController
     @FXML
     private TextField endNodeName;
     @FXML
-    private Text nodeNameText;
+    private Text infoText;
     @FXML
     private Text currentCoordsText;
 
@@ -87,7 +87,7 @@ public class MainController
         edge.setStartNode(node);
         activeEdge = edge;
         edgeDrawingActive = true;
-        nodeNameText.setText(node.getName() + " -> ");
+        infoText.setText(node.getName() + " -> ");
     }
 
     private void endLineAt(PathNode node, PathEdge edge)
@@ -105,7 +105,7 @@ public class MainController
                     EdgeWeightType.Distance,
                     edge.getLength());
             edges.add(edge);
-            nodeNameText.setText("");
+            infoText.setText("");
         }
         else
         {
@@ -125,17 +125,17 @@ public class MainController
         {
             node.setFill(PathNode.FILL_MOUSEOVER);
             if (!edgeDrawingActive)
-                nodeNameText.setText("Node: " + node.getName());
+                infoText.setText("Node: " + node.getName());
             else
-                nodeNameText.setText(nodeNameText.getText() + node.getName());
+                infoText.setText(infoText.getText() + node.getName());
         });
         node.setOnMouseExited(x ->
         {
             node.setFill(node.getCurrentMainColor());
             if (!edgeDrawingActive)
-                nodeNameText.setText("");
-            else if (nodeNameText.getText().contains(node.getName()) && nodeNameText.getText().lastIndexOf(node.getName()) > 0)
-                nodeNameText.setText(nodeNameText.getText().replace(" " + node.getName(), " "));
+                infoText.setText("");
+            else if (infoText.getText().contains(node.getName()) && infoText.getText().lastIndexOf(node.getName()) > 0)
+                infoText.setText(infoText.getText().replace(" " + node.getName(), " "));
         });
         nodes.add(node);
         model.addNode(new Node(node.getName()));
